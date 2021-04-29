@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "497058421088",
+    "project_id": "flavorful-android",
+    "storage_bucket": "flavorful-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497058421088:android:c9909dbbe611dc84702605",
+        "android_client_info": {
+          "package_name": "com.example.flavorful"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "497058421088-ovba8dt7a6ottrlfng03k4ukk1hto8ss.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByaOX9XZ5dN53A236zei5C170-6HkuM24"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "497058421088-ovba8dt7a6ottrlfng03k4ukk1hto8ss.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

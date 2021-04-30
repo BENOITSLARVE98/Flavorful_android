@@ -1,5 +1,6 @@
 package com.example.flavorful;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,33 +11,55 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
+import com.example.flavorful.validation.DataValidation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
+    FirebaseAuth mAuth;
+    FirebaseUser currentUser;
+
     public static final int REQUEST_DATA= 101;
+    ImageView profileImageView;
+    Uri returnUri;
+    EditText nameText;
+    EditText emailText;
+    EditText passwordText;
+
+    Intent discoverIntent;
+    public static final String value = "SignUpActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        //Intent to go to Discover page
+        discoverIntent = new Intent(this, MainActivity.class);
+        discoverIntent.putExtra("key", value);
+
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
         //Views and Inputs
-        ImageView profileImageView = findViewById(R.id.profile_image);
+        profileImageView = findViewById(R.id.profile_image);
         profileImageView.setOnClickListener(imageClickListener);
 
-        EditText emailText = findViewById(R.id.email_text);
-        EditText passwordText = findViewById(R.id.password_text);
+        nameText = findViewById(R.id.name_text);
+        emailText = findViewById(R.id.email_text);
+        passwordText = findViewById(R.id.password_text);
 
         //Sign Up button pressed
-        findViewById(R.id.signup_btn).setOnClickListener(v -> createAccount(emailText.getText().toString(), passwordText.getText().toString()));
+        findViewById(R.id.login_btn).setOnClickListener(v -> createAccount(returnUri,
+                nameText.getText().toString(), emailText.getText().toString(),
+                passwordText.getText().toString()));
 
     }
 
@@ -62,11 +85,75 @@ public class SignUpActivity extends AppCompatActivity {
         } else {
             //Get the file's content URi from incoming intent
             assert data != null;
-            Uri returnUri = data.getData();
+            returnUri = data.getData();
+
+            //Display selected image
+            profileImageView.setImageURI(returnUri);
         }
     }
 
-    private void createAccount(String email, String password) {
+    private void createAccount(Uri image, String name, String email, String password) {
+        if (validateAllFields()) {
+            //If all fields are valid, create account and save user info
+        } else {
+            Log.i("TAG","missing something");
+        }
 
+        AuthManager authManager = new AuthManager();
+
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("TAG", "createUserWithEmail:success");
+
+                            currentUser = task.getResult().getUser();
+                            if(currentUser != null){
+                                //Save user to FireStore user collection
+                                authManager.saveUser(image, name, email);
+
+                                //Load Discover page
+                                startActivity(discoverIntent);
+                            }
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("TAG", "createUserWithEmail:failure", task.getException());
+                            //Toast.makeText(SignUpActivity.this, "Authentication failed.",
+                            //Toast.LENGTH_SHORT).show();
+                            //updateUI(null);
+                        }
+                    }
+                });
+    }
+
+    private boolean validateAllFields() {
+
+        boolean result = true;
+
+        //Image
+        if (returnUri == null) {
+            result = false;
+        }
+        //Name
+        if (nameText.getText().toString().isEmpty() ) {
+            result = false;
+        }
+        //Email
+        //Email and password validation not working yet
+        DataValidation validator = new DataValidation();
+        String email = emailText.getText().toString();
+        if (validator.isValidEmail(email) == false) {
+            result = false;
+        }
+        //Password
+        String password = passwordText.getText().toString();
+        if (validator.isValidPassword(password) == false) {
+            result = false;
+        }
+
+        return result;
     }
 }

@@ -14,7 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/app_icon3x"
+        app:srcCompat="@drawable/flavorful_icon"
         android:contentDescription="@string/todo" />
 
     <EditText
@@ -31,7 +31,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/signup_btn"
+        android:id="@+id/login_btn"
         android:layout_width="265dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
@@ -66,7 +66,7 @@
         android:ems="10"
         android:hint="@string/password_hint"
         android:inputType="textPassword"
-        app:layout_constraintBottom_toTopOf="@+id/signup_btn"
+        app:layout_constraintBottom_toTopOf="@+id/login_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

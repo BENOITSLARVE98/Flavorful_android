@@ -95,38 +95,38 @@ public class SignUpActivity extends AppCompatActivity {
     private void createAccount(Uri image, String name, String email, String password) {
         if (validateAllFields()) {
             //If all fields are valid, create account and save user info
+            AuthManager authManager = new AuthManager();
+
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d("TAG", "createUserWithEmail:success");
+
+                                currentUser = task.getResult().getUser();
+                                if(currentUser != null){
+                                    //Save user to FireStore user collection
+                                    authManager.saveUser(image, name, email);
+
+                                    //Load Discover page
+                                    startActivity(discoverIntent);
+                                }
+
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w("TAG", "createUserWithEmail:failure", task.getException());
+                                //Toast.makeText(SignUpActivity.this, "Authentication failed.",
+                                //Toast.LENGTH_SHORT).show();
+                                //updateUI(null);
+                            }
+                        }
+                    });
         } else {
             Log.i("TAG","missing something");
         }
 
-        AuthManager authManager = new AuthManager();
-
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("TAG", "createUserWithEmail:success");
-
-                            currentUser = task.getResult().getUser();
-                            if(currentUser != null){
-                                //Save user to FireStore user collection
-                                authManager.saveUser(image, name, email);
-
-                                //Load Discover page
-                                startActivity(discoverIntent);
-                            }
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("TAG", "createUserWithEmail:failure", task.getException());
-                            //Toast.makeText(SignUpActivity.this, "Authentication failed.",
-                            //Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
-                    }
-                });
     }
 
     private boolean validateAllFields() {
@@ -142,15 +142,15 @@ public class SignUpActivity extends AppCompatActivity {
             result = false;
         }
         //Email
-        //Email and password validation not working yet
         DataValidation validator = new DataValidation();
-        String email = emailText.getText().toString();
-        if (validator.isValidEmail(email) == false) {
+        String email = emailText.getText().toString().trim();
+        if (!validator.isValidEmail(email)) {
             result = false;
         }
+
         //Password
-        String password = passwordText.getText().toString();
-        if (validator.isValidPassword(password) == false) {
+        String password = passwordText.getText().toString().trim();
+        if (!validator.isValidPassword(password)) {
             result = false;
         }
 

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Flavorful</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_discover">Discover</string>
+    <string name="title_favorites">Favorites</string>
 
     <string name="log_in_nav">Log In</string>
     <string name="sign_up_nav">Sign Up</string>
@@ -12,5 +12,6 @@
     <string name="email_hint">Email</string>
     <string name="todo">TODO</string>
     <string name="profile_image_text">Profile Image</string>
+    <string name="edit_profile_text">Edit Profile</string>
 
 </resources>

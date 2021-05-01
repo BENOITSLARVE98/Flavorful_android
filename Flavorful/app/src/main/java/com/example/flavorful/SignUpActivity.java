@@ -20,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Objects;
+
 public class SignUpActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
@@ -39,6 +41,8 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        Objects.requireNonNull(Objects.requireNonNull(getSupportActionBar())).hide();
 
         //Intent to go to Discover page
         discoverIntent = new Intent(this, MainActivity.class);

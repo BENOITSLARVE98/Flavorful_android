@@ -1,9 +1,9 @@
 package com.example.flavorful;
 
-import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -12,17 +12,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.rpc.context.AttributeContext;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executor;
 
 
 public class AuthManager {
@@ -95,4 +94,32 @@ public class AuthManager {
         });
 
     }
+
+    public void signOut() {
+        mAuth.signOut();
+    }
+
+
+//    public Bitmap convertUrlToBitmap(String imageUrl) {
+//
+//
+//        final long ONE_MEGABYTE = 1024 * 1024;
+//        StorageReference imageStorageRef = storage.getReferenceFromUrl(imageUrl);
+//        imageStorageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//            @Override
+//            public void onSuccess(byte[] bytes) {
+//
+//                //Convert bytes to bitmap image
+//                bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception exception) {
+//                // Handle any errors
+//                Log.i("TAG",exception.getMessage());
+//            }
+//        });
+//
+//        return bmp;
+//    }
 }

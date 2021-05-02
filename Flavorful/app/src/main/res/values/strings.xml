@@ -13,5 +13,9 @@
     <string name="todo">TODO</string>
     <string name="profile_image_text">Profile Image</string>
     <string name="edit_profile_text">Edit Profile</string>
+    <string name="edit_password_text">Edit Password</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="delete_user">Delete User</string>
+    <string name="save">Save</string>
 
 </resources>

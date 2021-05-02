@@ -101,15 +101,15 @@ public class LoginActivity extends AppCompatActivity {
         boolean result = true;
 
         //Email
-        //Eamil and password validation not working yet
         DataValidation validator = new DataValidation();
-        String email = emailText.getText().toString();
-        if (validator.isValidEmail(email) == false) {
+        String email = emailText.getText().toString().trim();
+        if (!validator.isValidEmail(email)) {
             result = false;
         }
+
         //Password
-        String password = passwordText.getText().toString();
-        if (validator.isValidPassword(password) == false) {
+        String password = passwordText.getText().toString().trim();
+        if (!validator.isValidPassword(password)) {
             result = false;
         }
 

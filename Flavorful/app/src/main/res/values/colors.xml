@@ -12,4 +12,8 @@
     <color name="light_red">#99F44336</color>
     <color name="light_reds">#4DF44336</color>
 
+    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">#DB504A</item>
+    </style>
+
 </resources>

@@ -1,22 +1,21 @@
 package com.example.flavorful.ui.favorites;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.flavorful.ProfileActivity;
 import com.example.flavorful.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,6 +26,8 @@ import java.util.Map;
 
 public class FavoritesFragment extends Fragment {
 
+    public static final String value = "Activity";
+
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private FavoritesViewModel favoritesViewModel;
@@ -36,19 +37,13 @@ public class FavoritesFragment extends Fragment {
         favoritesViewModel =
                 new ViewModelProvider(this).get(FavoritesViewModel.class);
         View root = inflater.inflate(R.layout.fragment_favorites, container, false);
-        //final TextView textView = root.findViewById(R.id.profileName_text);
-//        favoritesViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
+
         favoritesViewModel.getUsers().observe(getViewLifecycleOwner(), new Observer<Map<String, Object>>() {
             @Override
             public void onChanged(Map<String, Object> stringObjectMap) {
-                TextView nameText = root.findViewById(R.id.profileName_text);
-                TextView emailText = root.findViewById(R.id.profileEmail_text);
-                ImageView imageView = root.findViewById(R.id.profile_image_view);
+                TextView nameText = root.findViewById(R.id.pro_profileName_text);
+                TextView emailText = root.findViewById(R.id.pro_profileEmail_text);
+                ImageView imageView = root.findViewById(R.id.pro_profileImage_view);
 
                 nameText.setText(stringObjectMap.get("name").toString());
                 emailText.setText(stringObjectMap.get("email").toString());
@@ -72,6 +67,20 @@ public class FavoritesFragment extends Fragment {
                 });
             }
         });
+
+
+        //Intent to go to Profile page
+        Intent profileIntent = new Intent(getContext(), ProfileActivity.class);
+        profileIntent.putExtra("key", value);
+
+        root.findViewById(R.id.editPassword_btn).setOnClickListener(v -> {
+            // Load login activity
+            startActivity(profileIntent);
+        });
+
+
+
         return root;
+
     }
 }

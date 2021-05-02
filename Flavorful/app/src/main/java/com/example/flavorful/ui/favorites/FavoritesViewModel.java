@@ -24,20 +24,12 @@ public class FavoritesViewModel extends ViewModel {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
 
-    //private final MutableLiveData<String> name;
-    //Map<String, Object> users = new HashMap<>();
     private final MutableLiveData<Map<String, Object>> users;
 
     public FavoritesViewModel() {
-        //name= new MutableLiveData<>();
         users= new MutableLiveData<>();
-       // name.setValue("my name");
         retrieveUserInfo();
     }
-
-//    public LiveData<String> getText() {
-//        return name;
-//    }
 
     public MutableLiveData<Map<String, Object>> getUsers() {
         return users;
@@ -59,7 +51,6 @@ public class FavoritesViewModel extends ViewModel {
 
                     if (snapshot != null && snapshot.exists()) {
                         Log.d("TAG", "Current data: " + snapshot.getData());
-                        //name.setValue(snapshot.getData().get("name").toString());
                         users.setValue(snapshot.getData());
 
                     } else {

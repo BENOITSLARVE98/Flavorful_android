@@ -7,7 +7,7 @@
     tools:context=".ui.favorites.FavoritesFragment">
 
     <Button
-        android:id="@+id/editProfile_btn"
+        android:id="@+id/editPassword_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="155dp"
@@ -20,10 +20,10 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileEmail_text" />
+        app:layout_constraintTop_toBottomOf="@+id/pro_profileEmail_text" />
 
     <TextView
-        android:id="@+id/profileName_text"
+        android:id="@+id/pro_profileName_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="174dp"
@@ -32,10 +32,10 @@
         android:text="@string/name_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_image_view" />
+        app:layout_constraintTop_toBottomOf="@+id/pro_profileImage_view" />
 
     <TextView
-        android:id="@+id/profileEmail_text"
+        android:id="@+id/pro_profileEmail_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="188dp"
@@ -44,10 +44,10 @@
         android:text="@string/email_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileName_text" />
+        app:layout_constraintTop_toBottomOf="@+id/pro_profileName_text" />
 
     <ImageView
-        android:id="@+id/profile_image_view"
+        android:id="@+id/pro_profileImage_view"
         android:layout_width="80dp"
         android:layout_height="70dp"
         android:layout_marginTop="8dp"
@@ -67,7 +67,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editProfile_btn">
+        app:layout_constraintTop_toBottomOf="@+id/editPassword_btn">
 
     </GridView>
 </androidx.constraintlayout.widget.ConstraintLayout>

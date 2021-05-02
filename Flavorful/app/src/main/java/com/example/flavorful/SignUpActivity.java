@@ -114,9 +114,9 @@ public class SignUpActivity extends AppCompatActivity {
                                     //Save user to FireStore user collection
                                     authManager.saveUser(image, name, email);
 
-                                    //Load Discover page
-                                    startActivity(discoverIntent);
                                 }
+                                //Load Discover page
+                                startActivity(discoverIntent);
 
                             } else {
                                 // If sign in fails, display a message to the user.

@@ -30,12 +30,33 @@ public class GetRecipesTask extends AsyncTask<String, Void, ArrayList<Recipe>> {
         OkHttpClient client = new OkHttpClient();
         Request request;
 
+        String tag = strings[0];
+        String searchWord = strings[1];
+
         request = new Request.Builder()
-                .url("https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes")
+                .url(String.format("https://tasty.p.rapidapi.com/recipes/list?from=0&size=100&tags=%s&q=%s"
+                        , tag, searchWord))
                 .get()
                 .addHeader("x-rapidapi-key", "59d338597cmsh4f789cced9df6a2p1b0e7fjsna39bda851ccd")
                 .addHeader("x-rapidapi-host", "tasty.p.rapidapi.com")
                 .build();
+
+//        if (word != null) {
+//            request = new Request.Builder()
+//                    .url(String.format("https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes=%a"
+//                            , word))
+//                    .get()
+//                    .addHeader("x-rapidapi-key", "59d338597cmsh4f789cced9df6a2p1b0e7fjsna39bda851ccd")
+//                    .addHeader("x-rapidapi-host", "tasty.p.rapidapi.com")
+//                    .build();
+//        } else {
+//            request = new Request.Builder()
+//                    .url("https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes")
+//                    .get()
+//                    .addHeader("x-rapidapi-key", "59d338597cmsh4f789cced9df6a2p1b0e7fjsna39bda851ccd")
+//                    .addHeader("x-rapidapi-host", "tasty.p.rapidapi.com")
+//                    .build();
+//        }
 
         try {
             Response response = client.newCall(request).execute();

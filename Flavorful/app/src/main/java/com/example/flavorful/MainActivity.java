@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.GridView;
 import android.widget.SearchView;
 
 import com.example.flavorful.net.GetRecipesTask;
@@ -27,6 +28,7 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
 
     boolean isConnected;
+    public String wordSearched;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +49,14 @@ public class MainActivity extends AppCompatActivity {
         ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(R.color.custom_red));
         actionBar.setBackgroundDrawable(colorDrawable);
 
-        getRecipesFromApi();
+        getRecipesFromApi("under_30_minutes","");
     }
 
-    public void getRecipesFromApi() {
+    public void getRecipesFromApi(String tag, String searchWord) {
         isConnected = verifyNetwork();
         if (isConnected) {
             GetRecipesTask task = new GetRecipesTask();
-            task.execute();
+            task.execute(tag,searchWord);
         }
     }
 
@@ -72,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+        final GridView gridView= findViewById(R.id.gridView_discover);
+
         getMenuInflater().inflate(R.menu.search_menu, menu);
 
         MenuItem menuItem = menu.findItem(R.id.search_icon);
@@ -83,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //wordSearched = query;
+                getRecipesFromApi("",query);
                 return false;
             }
 

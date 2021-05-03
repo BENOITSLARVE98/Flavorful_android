@@ -17,5 +17,8 @@
     <string name="sign_out">Sign Out</string>
     <string name="delete_user">Delete User</string>
     <string name="save">Save</string>
+    <string name="no_video_to_display">No Video To Display</string>
+    <string name="step_by_step_mode">Step-by-step mode</string>
+    <string name="title_favorite">My Recipes</string>
 
 </resources>

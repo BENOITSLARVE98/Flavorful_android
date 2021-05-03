@@ -32,6 +32,8 @@ android {
 
 dependencies {
 
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.6'
     implementation 'com.google.firebase:firebase-storage'
     implementation 'com.google.firebase:firebase-core:18.0.3'
     implementation 'com.google.firebase:firebase-firestore'

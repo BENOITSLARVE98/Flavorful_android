@@ -35,7 +35,6 @@ public class FavoritesViewModel extends ViewModel {
         return users;
     }
 
-
     public void retrieveUserInfo() {
 
         if(currentUser != null) {
@@ -58,8 +57,6 @@ public class FavoritesViewModel extends ViewModel {
                     }
                 }
             });
-
-
         }
     }
 

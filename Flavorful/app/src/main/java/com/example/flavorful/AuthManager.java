@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -28,27 +29,26 @@ public class AuthManager {
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseUser currentUser = mAuth.getCurrentUser();
     Map<String, Object> users = new HashMap<>();
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
 
-    public void saveUser(Uri image, String name, String email) {
+    public void saveUser(FirebaseUser savedUser, Uri image, String name, String email) {
 
-        if(currentUser != null){
-            users.put("uid", currentUser.getUid());
+        //if(currentUser != null){
+            users.put("uid", mAuth.getCurrentUser().getUid());
             users.put("name", name);
             users.put("email", email);
             users.put("profileImageUrl", "");
 
-            db.collection("users").document(currentUser.getUid())
+            db.collection("users").document(savedUser.getUid())
                     .set(users)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d("TAG", "DocumentSnapshot successfully written!");
-                            saveImage(image);
+                            saveImage(savedUser,image);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -57,12 +57,12 @@ public class AuthManager {
                             Log.w("TAG", "Error writing document", e);
                         }
                     });
-        }
+        //}
 
     }
 
-    public void saveImage(Uri image) {
-        StorageReference storageProfileRef = storageRef.child("profileImages").child(currentUser.getUid());
+    public void saveImage(FirebaseUser savedUser, Uri image) {
+        StorageReference storageProfileRef = storageRef.child("profileImages").child(savedUser.getUid());
         UploadTask uploadTask = storageProfileRef.putFile(image);
 
         //Save image to firebase Storage
@@ -84,7 +84,7 @@ public class AuthManager {
                     users.put("profileImageUrl", downloadUri.toString());
 
                     //Save user to FireStore user collection
-                    db.collection("users").document(currentUser.getUid()).update(users);
+                    db.collection("users").document(savedUser.getUid()).update(users);
 
                 } else {
                     // Handle failures

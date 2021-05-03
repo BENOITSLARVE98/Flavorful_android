@@ -22,7 +22,6 @@ import java.util.concurrent.Executor;
 public class LoginActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
-    FirebaseUser currentUser;
 
     public static final String value = "loginActivity";
 
@@ -80,8 +79,8 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("TAG", "signInWithEmail:success");
 
-                            currentUser = task.getResult().getUser();
-                            if(currentUser != null){
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if(user != null){
                                 //Load Discover page
                                 startActivity(discoverIntent);
                             }

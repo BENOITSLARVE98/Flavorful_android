@@ -25,7 +25,6 @@ import java.util.Objects;
 public class SignUpActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
-    FirebaseUser currentUser;
 
     public static final int REQUEST_DATA= 101;
     ImageView profileImageView;
@@ -109,11 +108,10 @@ public class SignUpActivity extends AppCompatActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("TAG", "createUserWithEmail:success");
 
-                                currentUser = task.getResult().getUser();
-                                if(currentUser != null){
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                if(user != null){
                                     //Save user to FireStore user collection
-                                    authManager.saveUser(image, name, email);
-
+                                    authManager.saveUser(user, image, name, email);
                                 }
                                 //Load Discover page
                                 startActivity(discoverIntent);
@@ -123,7 +121,6 @@ public class SignUpActivity extends AppCompatActivity {
                                 Log.w("TAG", "createUserWithEmail:failure", task.getException());
                                 //Toast.makeText(SignUpActivity.this, "Authentication failed.",
                                 //Toast.LENGTH_SHORT).show();
-                                //updateUI(null);
                             }
                         }
                     });

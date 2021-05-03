@@ -187,7 +187,7 @@ public class ProfileActivity extends AppCompatActivity {
                 db.collection("users").document(currentUser.getUid()).update(users);
             } else {
                 //image was updated by user
-                authManager.saveImage(returnUri); //update image in both FireStore and storage
+                authManager.saveImage(currentUser,returnUri); //update image in both FireStore and storage
 
                 Map<String, Object> users = new HashMap<>();
                 users.put("name", nameText.getText().toString()); //Name
@@ -247,21 +247,24 @@ public class ProfileActivity extends AppCompatActivity {
                                 //Set views
                                 //Set image
                                 String imageUrl = snapshot.getData().get("profileImageUrl").toString();
-                                final long ONE_MEGABYTE = 1024 * 1024;
-                                StorageReference storageRef = storage.getReferenceFromUrl(imageUrl);
-                                storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                    @Override
-                                    public void onSuccess(byte[] bytes) {
-                                        // Data for "images/island.jpg" is returns, use this as needed
-                                        Bitmap bm = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                                        imageView.setImageBitmap(bm);
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        // Handle any errors
-                                    }
-                                });
+
+                                if (!imageUrl.isEmpty()) {
+                                    final long ONE_MEGABYTE = 1024 * 1024;
+                                    StorageReference storageRef = storage.getReferenceFromUrl(imageUrl);
+                                    storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                        @Override
+                                        public void onSuccess(byte[] bytes) {
+                                            // Data for "images/island.jpg" is returns, use this as needed
+                                            Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                            imageView.setImageBitmap(bm);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception exception) {
+                                            // Handle any errors
+                                        }
+                                    });
+                                }
 
                                 nameLabelText.setText(snapshot.getData().get("name").toString());
                                 nameText.setText(snapshot.getData().get("name").toString());
@@ -273,8 +276,6 @@ public class ProfileActivity extends AppCompatActivity {
                             }
                         }
                     });
-
-
         }
     }
 

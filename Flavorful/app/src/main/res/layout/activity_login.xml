@@ -47,7 +47,7 @@
         android:id="@+id/login_btn"
         android:layout_width="265dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="72dp"
         android:backgroundTint="@color/custom_red"
         android:text="@string/login_btn"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"

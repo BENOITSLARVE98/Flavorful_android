@@ -4,16 +4,25 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.flavorful.object.Recipe;
+
+import java.util.ArrayList;
+
 public class DiscoverViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
+    private MutableLiveData<ArrayList<Recipe>> recipeList;
+    static ArrayList<Recipe> feedRecipes;
 
-    public DiscoverViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is discover fragment");
+    LiveData<ArrayList<Recipe>> getRecipeList() {
+        if (recipeList == null) {
+            recipeList = new MutableLiveData<>();
+            recipeList.setValue(feedRecipes);
+        }
+        return recipeList;
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public static void loadRecipes(ArrayList<Recipe> recipes) {
+        feedRecipes = new ArrayList<>();
+        feedRecipes = recipes;
     }
 }

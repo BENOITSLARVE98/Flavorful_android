@@ -21,8 +21,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class FavoritesFragment extends Fragment {
 
@@ -34,6 +36,7 @@ public class FavoritesFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         favoritesViewModel =
                 new ViewModelProvider(this).get(FavoritesViewModel.class);
         View root = inflater.inflate(R.layout.fragment_favorites, container, false);
@@ -50,21 +53,23 @@ public class FavoritesFragment extends Fragment {
 
                 String imageUrl = stringObjectMap.get("profileImageUrl").toString();
 
-                final long ONE_MEGABYTE = 1024 * 1024;
-                StorageReference storageRef = storage.getReferenceFromUrl(imageUrl);
-                storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] bytes) {
-                        // Data for "images/island.jpg" is returns, use this as needed
-                        Bitmap bm = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                        imageView.setImageBitmap(bm);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle any errors
-                    }
-                });
+                if (!imageUrl.isEmpty()) {
+                    final long ONE_MEGABYTE = 1024 * 1024;
+                    StorageReference storageRef = storage.getReferenceFromUrl(imageUrl);
+                    storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            // Data for "images/island.jpg" is returns, use this as needed
+                            Bitmap bm = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                            imageView.setImageBitmap(bm);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
+                        }
+                    });
+                }
             }
         });
 

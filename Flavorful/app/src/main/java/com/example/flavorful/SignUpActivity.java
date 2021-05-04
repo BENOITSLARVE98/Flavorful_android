@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.flavorful.validation.DataValidation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -63,6 +64,11 @@ public class SignUpActivity extends AppCompatActivity {
         findViewById(R.id.login_btn).setOnClickListener(v -> createAccount(returnUri,
                 nameText.getText().toString(), emailText.getText().toString(),
                 passwordText.getText().toString()));
+
+        findViewById(R.id.login_nav).setOnClickListener(v -> {
+            // Load login activity
+            startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+        });
 
     }
 
@@ -119,8 +125,8 @@ public class SignUpActivity extends AppCompatActivity {
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.w("TAG", "createUserWithEmail:failure", task.getException());
-                                //Toast.makeText(SignUpActivity.this, "Authentication failed.",
-                                //Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignUpActivity.this, "Something went wrong.",
+                                Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -133,6 +139,7 @@ public class SignUpActivity extends AppCompatActivity {
     private boolean validateAllFields() {
 
         boolean result = true;
+        DataValidation validation = new DataValidation();
 
         //Image
         if (returnUri == null) {
@@ -141,18 +148,21 @@ public class SignUpActivity extends AppCompatActivity {
         //Name
         if (nameText.getText().toString().isEmpty() ) {
             result = false;
+            validation.validationError("Enter your name", nameText);
         }
         //Email
         DataValidation validator = new DataValidation();
         String email = emailText.getText().toString().trim();
         if (!validator.isValidEmail(email)) {
             result = false;
+            validation.validationError("Invalid email", emailText);
         }
 
         //Password
         String password = passwordText.getText().toString().trim();
         if (!validator.isValidPassword(password)) {
             result = false;
+            validation.validationError("Invalid Passsowrd", passwordText);
         }
 
         return result;

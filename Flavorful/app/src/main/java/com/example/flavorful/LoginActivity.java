@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.flavorful.validation.DataValidation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,8 +27,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final String value = "loginActivity";
 
-    TextView emailText;
-    TextView passwordText;
+    EditText emailText;
+    EditText passwordText;
 
     Intent discoverIntent;
 
@@ -47,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         findViewById(R.id.sign_up_nav).setOnClickListener(v -> {
-            // Load login activity
+            // Load sign up activity
             startActivity(signUpActivityIntent);
         });
 
@@ -66,50 +68,52 @@ public class LoginActivity extends AppCompatActivity {
 
     private void signIn(String email, String password) {
         if (validateAllFields()) {
-            //If all fields are valid, create account and save user info
+
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener( this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d("TAG", "signInWithEmail:success");
+
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                if(user != null){
+                                    //Load Discover page
+                                    startActivity(discoverIntent);
+                                }
+
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w("TAG", "signInWithEmail:failure", task.getException());
+                                Toast.makeText(LoginActivity.this, "Invalid email or password.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
         } else {
             Log.i("TAG","missing something");
         }
-
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener( this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("TAG", "signInWithEmail:success");
-
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            if(user != null){
-                                //Load Discover page
-                                startActivity(discoverIntent);
-                            }
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("TAG", "signInWithEmail:failure", task.getException());
-
-                        }
-                    }
-                });
-
     }
 
     private boolean validateAllFields() {
 
         boolean result = true;
+        DataValidation validation = new DataValidation();
 
         //Email
         DataValidation validator = new DataValidation();
         String email = emailText.getText().toString().trim();
         if (!validator.isValidEmail(email)) {
             result = false;
+            validation.validationError("Invalid email", emailText);
         }
 
         //Password
         String password = passwordText.getText().toString().trim();
         if (!validator.isValidPassword(password)) {
             result = false;
+            validation.validationError("Invalid Passsowrd", passwordText);
         }
 
         return result;

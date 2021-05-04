@@ -2,6 +2,7 @@ package com.example.flavorful.fragments;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,13 +25,32 @@ import androidx.fragment.app.Fragment;
 import com.example.flavorful.MainActivity;
 import com.example.flavorful.R;
 import com.example.flavorful.object.Recipe;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class DetailsFragment extends Fragment {
 
     private static final String ARG_RECIPE = "ARG_RECIPE";
     Recipe recipe;
+
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseUser currentUser = mAuth.getCurrentUser();
+
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReference();
 
     public static DetailsFragment newInstance(Recipe recipe) {
 
@@ -119,26 +139,76 @@ public class DetailsFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.save_icon) {
-            //Recipe save button pressed
-            //Save recipe object to firebase database
-            saveRecipeToFirebase();
+            //Save recipe to FireStore
+            saveRecipeToFireStore();
             Toast.makeText(getContext(), "Recipe Saved", Toast.LENGTH_SHORT).show();
 
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void saveRecipeToFirebase() {
+    private void saveRecipeToFireStore() {
+        Map<String, Object> recipes = new HashMap<>();
 
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference databaseRef = database.getReference("recipes");
-//
-//        //Save to currently logged in user
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        assert user != null;
-//        String uid = user.getUid();
-//
-//        databaseRef.child(uid).push().setValue(recipe);
+        recipes.put("name", recipe.getName());
+        recipes.put("imageString", "");
+        recipes.put("videoUrl", recipe.getVideo());
+        recipes.put("instructionsArray", recipe.getInstructionArray());
+        recipes.put("ingredient", recipe.getIngredientArray());
+
+        db.collection("recipes").document(currentUser.getUid())
+                .set(recipes)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("TAG", "DocumentSnapshot successfully written!");
+
+
+                        //SAVE RECIPE IMAGE
+                        byte[] bytes= recipe.getImage().getBytes();
+                        Uri uri =  Uri.parse(recipe.getImage());
+
+                        StorageReference storageProfileRef = storageRef.child("recipeImages").child(currentUser.getUid());
+                        UploadTask uploadTask = storageProfileRef.putBytes(bytes);
+                        //UploadTask uploadTask = storageProfileRef.putFile(uri);
+
+                        //Save image to firebase Storage
+                        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                            @Override
+                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
+
+                                // Continue with the task to get the download URL
+                                return storageProfileRef.getDownloadUrl();
+                            }
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if (task.isSuccessful()) {
+                                    Uri downloadUri = task.getResult();
+                                    recipes.put("imageString", downloadUri.toString());
+
+                                    //Update recipe image with url
+                                    db.collection("recipes").document(currentUser.getUid()).update(recipes);
+
+                                } else {
+                                    // Handle failures
+                                    // ...
+                                }
+                            }
+                        });
+
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("TAG", "Error writing document", e);
+                    }
+                });
     }
 
 }

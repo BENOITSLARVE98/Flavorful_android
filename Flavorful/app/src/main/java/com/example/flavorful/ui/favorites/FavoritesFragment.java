@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +18,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.flavorful.ProfileActivity;
 import com.example.flavorful.R;
+import com.example.flavorful.RecipeAdapter;
+import com.example.flavorful.fragments.DetailsFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,6 +43,7 @@ public class FavoritesFragment extends Fragment {
         favoritesViewModel =
                 new ViewModelProvider(this).get(FavoritesViewModel.class);
         View root = inflater.inflate(R.layout.fragment_favorites, container, false);
+        final GridView gridView= root.findViewById(R.id.gridView_favorites);
 
         favoritesViewModel.getUsers().observe(getViewLifecycleOwner(), new Observer<Map<String, Object>>() {
             @Override
@@ -74,6 +78,21 @@ public class FavoritesFragment extends Fragment {
         });
 
 
+        favoritesViewModel.getRecipeList().observe(getViewLifecycleOwner(), recipeList-> {
+            // update UI
+            RecipeAdapter adapter = new RecipeAdapter(getContext(), recipeList);
+            gridView.setAdapter(adapter);
+            gridView.setOnItemClickListener((parent, view, position, id) -> {
+                //Load Details Fragment
+                assert getFragmentManager() != null;
+                requireFragmentManager().beginTransaction()
+                        .addToBackStack(null)
+                        .replace(R.id.nav_host_fragment,
+                                DetailsFragment.newInstance(recipeList.get(position))).commit();
+            });
+        });
+
+
         //Intent to go to Profile page
         Intent profileIntent = new Intent(getContext(), ProfileActivity.class);
         profileIntent.putExtra("key", value);
@@ -82,9 +101,6 @@ public class FavoritesFragment extends Fragment {
             // Load login activity
             startActivity(profileIntent);
         });
-
-
-
         return root;
 
     }

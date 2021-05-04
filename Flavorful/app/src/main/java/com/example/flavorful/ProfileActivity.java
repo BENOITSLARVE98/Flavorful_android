@@ -119,6 +119,11 @@ public class ProfileActivity extends AppCompatActivity {
         //Delete user profile image
         StorageReference storageProfileRef = storageRef.child("profileImages").child(currentUser.getUid());
         storageProfileRef.delete();
+
+        //Delete recipes associated with user
+        db.collection("recipes").document(currentUser.getUid()).delete();
+        StorageReference recipeImageRef = storageRef.child("recipeImages").child(currentUser.getUid());
+        recipeImageRef.delete();
     }
 
     private void editPassword() {

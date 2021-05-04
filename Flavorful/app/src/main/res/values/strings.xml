@@ -21,4 +21,13 @@
     <string name="step_by_step_mode">Step-by-step mode</string>
     <string name="title_favorite">My Recipes</string>
 
+    <string-array name="spinnerValues">
+        <item>Popular</item>
+        <item>Indian</item>
+        <item>Caribbean</item>
+        <item>African</item>
+        <item>Mexican</item>
+        <item>German</item>
+    </string-array>
+
 </resources>

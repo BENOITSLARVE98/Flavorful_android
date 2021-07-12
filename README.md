@@ -8,7 +8,7 @@ The purpose of Flavorful is to inform users of how many calories a dish contains
 
 Flavorful will be available on several devices including iPhone, iPads, and the Apple Watch. As already mentioned, Flavorful on the Apple Watch is a terrific way to make sure that you get everything you need at the store for that tasty meal you’re preparing right from your wrist.
 
-#Features:
+## Features:
 One key feature of Flavorful is the ability to search for numerous recipes with a few key words.
 Another feature is the ability to save recipes as favorites and come back to them later.
 The last feature guides the user through a step-by-step process to help them prepare a wonderful new dish they've just learned.
